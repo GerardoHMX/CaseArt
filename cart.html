@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - CaseArt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="#" class="logo">
+                    <img src="https://via.placeholder.com/50x50" alt="CaseArt Logo" class="logo-img">
+                    <span>CaseArt</span>
+                </a>
+        
+                <div class="nav-links">
+                    <a href="index.html">Inicio</a>
+                    <a href="products.html">Productos</a>
+                    <a href="offers.html">Ofertas</a>
+                    <a href="contact.html">Contacto</a>
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Buscar productos...">
+                        <button type="button" id="searchButton">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+        
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+    <div class="cart-container">
+        <h2>Tu Carrito de Compras</h2>
+        <div id="cart-items"></div>
+        <div class="cart-summary">
+            <div class="total">Total: <span id="cart-total">$0.00</span></div>
+            <div class="share-buttons">
+                <button class="share-btn whatsapp" onclick="shareOrder('whatsapp')">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="share-btn email" onclick="shareOrder('email')">
+                    <i class="fas fa-envelope"></i> Email
+                </button>
+                <button class="share-btn instagram" onclick="shareOrder('instagram')">
+                    <i class="fab fa-instagram"></i> Instagram
+                </button>
+            </div>
+            <br>
+            <button class="btn checkout-btn">Proceder al pago</button>
+        </div>
+    </div>
+
+    <!-- Scripts al final del body -->
+    <script src="mainData.js"></script>
+    <script src="cart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

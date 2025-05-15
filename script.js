@@ -7,38 +7,48 @@ if (typeof cart === 'undefined') {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const hamburger = document.getElementById('hamburger-menu');
-    const navLinks = document.querySelector('.nav-links');
+    // Eliminar la parte del menú hamburguesa ya que ahora está en menu.js
+    displayProducts();
+    setupFilterButtons();
+    setupLoadMoreButton();
 
+    // Mejorar manejo táctil para el menú
     if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevenir que el click se propague
-            navLinks.classList.toggle('active');
-            const isOpen = navLinks.classList.contains('active');
-            hamburger.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        let touchstart = 0;
+        
+        hamburger.addEventListener('touchstart', (e) => {
+            touchstart = e.timeStamp;
         });
 
-        // Cerrar menú cuando se hace clic en cualquier lugar fuera
-        document.addEventListener('click', function(e) {
+        hamburger.addEventListener('touchend', (e) => {
+            // Prevenir clicks fantasma
+            if (e.timeStamp - touchstart < 300) {
+                e.preventDefault();
+                navLinks.classList.toggle('active');
+                const isOpen = navLinks.classList.contains('active');
+                hamburger.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            }
+        });
+
+        // Cerrar menú al tocar fuera
+        document.addEventListener('touchstart', (e) => {
             if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
                 navLinks.classList.remove('active');
                 hamburger.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
-
-        // Cerrar menú cuando se hace clic en un enlace
-        const navLinksItems = navLinks.querySelectorAll('a');
-        navLinksItems.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
     }
 
-    displayProducts();
-    setupFilterButtons();
-    setupLoadMoreButton();
+    // Mejorar interacción táctil para botones
+    document.querySelectorAll('.card-btn, .filter-btn, .btn').forEach(button => {
+        button.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+
+        button.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
 });
 
 function displayProducts() {

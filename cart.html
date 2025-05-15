@@ -2,43 +2,40 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3498db">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Carrito de Compras - CaseArt</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="cart.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-        <!-- Navbar -->
-        <nav class="navbar">
-            <div class="container">
-                <a href="#" class="logo">
-                    <img src="https://via.placeholder.com/50x50" alt="CaseArt Logo" class="logo-img">
-                    <span>CaseArt</span>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="images/Logo.jpeg" alt="CaseArt Logo" class="logo-img">
+                <span>CaseArt</span>
+            </a>
+    
+            <div class="nav-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#productos">Productos</a>
+                <a href="#ofertas">Ofertas</a>
+                <a href="#contacto">Contacto</a>
+                <a href="cart.html" class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
                 </a>
-        
-                <div class="nav-links">
-                    <a href="index.html">Inicio</a>
-                    <a href="products.html">Productos</a>
-                    <a href="offers.html">Ofertas</a>
-                    <a href="contact.html">Contacto</a>
-                    <a href="cart.html" class="cart-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
-                    </a>
-                    <div class="search-container">
-                        <input type="text" id="searchInput" placeholder="Buscar productos...">
-                        <button type="button" id="searchButton">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-        
-                <button class="hamburger" id="hamburger-menu" aria-label="Menú">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
-        </nav>
+    
+            <button class="hamburger" id="hamburger-menu" aria-label="Menú">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
     <div class="cart-container">
         <h2>Tu Carrito de Compras</h2>
@@ -62,6 +59,7 @@
     </div>
 
     <!-- Scripts al final del body -->
+    <script src="menu.js"></script>
     <script src="mainData.js"></script>
     <script src="cart.js"></script>
     <script src="script.js"></script>

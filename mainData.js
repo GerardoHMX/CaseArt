@@ -5,6 +5,26 @@ const products = [
     name: "Stone Island",
     price: 8,
     category: "Iphone",
+    colors: ["Negro", "Blanco", "Azul", "Rojo"],
+    models: ["iPhone 13", "iPhone 13 Pro", "iPhone 14", "iPhone 14 Pro", "iPhone 15", "iPhone 15 Pro"],
+    features: [
+      {
+        icon: "shield-alt",
+        text: "Protección contra caídas"
+      },
+      {
+        icon: "tint",
+        text: "Resistente al agua"
+      },
+      {
+        icon: "box",
+        text: "Incluye protector de pantalla"
+      },
+      {
+        icon: "magnet",
+        text: "Compatible con MagSafe"
+      }
+    ],
     images: [
       "images/StoneIsland/StoneIsland1.png",
       "images/StoneIsland/StoneIsland2.png",
@@ -65,3 +85,37 @@ const products = [
 //         description: "Cargador rápido con un enchufe tipo C de 20W para iPhones",
 //         discount: 20
 // },
+
+// Añadir sección de ofertas
+const specialOffers = [
+    {
+        id: 'offer1',
+        title: 'Super Oferta Limitada',
+        description: 'Fundas premium seleccionadas con diseños exclusivos',
+        discount: '40',
+        image: 'images/StoneIsland/StoneIsland1.png',
+        type: 'main',
+        endTime: '48h',
+        buttonText: 'Ver Ofertas'
+    },
+    {
+        id: 'offer2',
+        title: 'Pack Duo',
+        description: 'Llévate dos fundas al precio de una',
+        badge: '2x1',
+        image: 'images/StoneIsland/StoneIsland2.png',
+        type: 'secondary',
+        buttonText: 'Comprar Ahora'
+    },
+    {
+        id: 'offer3',
+        title: 'Bundle Protección Total',
+        description: 'Funda + Protector de Pantalla',
+        badge: 'HOT',
+        image: 'images/StoneIsland/StoneIsland3.png',
+        type: 'secondary',
+        buttonText: 'Ver Bundle'
+    }
+];
+
+window.specialOffers = specialOffers;

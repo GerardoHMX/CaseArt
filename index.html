@@ -3,10 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="#3498db">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Agregar meta tags para SEO y social media -->
+    <meta property="og:title" content="CaseArt - Fundas y Accesorios">
+    <meta property="og:description" content="Las mejores fundas y protectores para tu teléfono">
+    <meta property="og:image" content="images/Logo.jpeg">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/Logo.jpeg">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/Logo.jpeg">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/Logo.jpeg">
+    <link rel="shortcut icon" href="images/Logo.jpeg" type="image/x-icon">
+    
     <title>CaseArt - Fundas, Protectores y Accesorios para Teléfonos</title>
     
     <!-- Meta tags para SEO y compartir en redes sociales -->
@@ -17,22 +29,24 @@
     <link rel="icon" href="images/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="alerts.css">
 </head>
 
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
-            <a href="#" class="logo">
+            <a href="index.html" class="logo">
                 <img src="images/Logo.jpeg" alt="CaseArt Logo" class="logo-img">
                 <span>CaseArt</span>
             </a>
 
             <div class="nav-links">
-                <a href="#inicio">Inicio</a>
-                <a href="#productos">Productos</a>
-                <a href="#ofertas">Ofertas</a>
-                <a href="#contacto">Contacto</a>
+                <a href="#inicio" class="scroll-link">Inicio</a>
+                <a href="#productos" class="scroll-link">Productos</a>
+                <a href="#ofertas" class="scroll-link">Ofertas</a>
+                <a href="#contacto" class="scroll-link">Contacto</a>
                 <a href="cart.html" class="cart-btn">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
@@ -60,13 +74,29 @@
     <!-- Productos Section -->
     <section class="products" id="productos">
         <div class="container">
+            <br>
             <h2 class="section-title">Nuestros Productos</h2>
             <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="iphone">iPhone</button>
-                <button class="filter-btn" data-filter="samsung">Samsung</button>
-                <button class="filter-btn" data-filter="protector">Protectores</button>
-                <button class="filter-btn" data-filter="accesorios">Accesorios</button>
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th-large"></i>
+                    <span>Todos</span>
+                </button>
+                <button class="filter-btn" data-filter="iphone">
+                    <i class="fab fa-apple"></i>
+                    <span>iPhone</span>
+                </button>
+                <button class="filter-btn" data-filter="samsung">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Samsung</span>
+                </button>
+                <button class="filter-btn" data-filter="protector">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Protectores</span>
+                </button>
+                <button class="filter-btn" data-filter="accesorios">
+                    <i class="fas fa-headphones"></i>
+                    <span>Accesorios</span>
+                </button>
             </div>
 
             <div class="products-grid" id="productsGrid">
@@ -83,11 +113,60 @@
     <section class="offers" id="ofertas">
         <div class="container">
             <h2 class="section-title">Ofertas Especiales</h2>
-            <div class="offer-banner">
-                <div class="offer-content">
-                    <h3 class="offer-title">Hasta 40% de descuento</h3>
-                    <p class="offer-desc">En fundas seleccionadas esta semana</p>
-                    <button class="btn">Ver ofertas</button>
+            <div class="offers-grid">
+                <div class="offer-card main-offer glow-effect">
+                    <div class="offer-content">
+                        <div class="offer-badge pulse-animation">
+                            <span>40% OFF</span>
+                            <i class="fas fa-fire-alt flame-animation"></i>
+                        </div>
+                        <h3 class="offer-title slide-in-left">Oferta Especial</h3>
+                        <p class="offer-desc fade-in">Fundas premium seleccionadas</p>
+                        <div class="offer-timer countdown-animation">
+                            <i class="fas fa-clock rotate-animation"></i>
+                            <span>Termina en: 48h</span>
+                        </div>
+                        <a href="#productos" class="btn-modern shine-effect">
+                            <span>Ver Ofertas</span>
+                            <i class="fas fa-arrow-right bounce-animation"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="offers-secondary">
+                    <div class="offer-card float-effect">
+                        <div class="offer-content">
+                            <div class="offer-badge scale-in">
+                                <span>2x1</span>
+                                <i class="fas fa-tags swing-animation"></i>
+                            </div>
+                            <h3 class="offer-title slide-in-right">Pack Duo</h3>
+                            <p class="offer-desc fade-in">Dos fundas al precio de una</p>
+                            <a href="#productos" class="btn-modern outline glow-on-hover">
+                                <span>Comprar</span>
+                                <i class="fas fa-chevron-right slide-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="offer-card float-effect">
+                        <div class="offer-content">
+                            <div class="offer-badge hot pulse-animation">
+                                <span>HOT</span>
+                                <i class="fas fa-bolt flash-animation"></i>
+                            </div>
+                            <h3 class="offer-title slide-in-right">Bundle Total</h3>
+                            <p class="offer-desc fade-in">Funda + Protector de Pantalla</p>
+                            <p class="offer-price pop-in">
+                                <span class="old-price">€32</span>
+                                <span class="new-price highlight-animation">€24</span>
+                            </p>
+                            <a href="#productos" class="btn-modern shine-effect">
+                                <span>Ver Bundle</span>
+                                <i class="fas fa-chevron-right slide-right"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -104,11 +183,16 @@
                     <p><i class="fas fa-phone"></i> Teléfono: +123 456 7890</p>
                     <p><i class="fas fa-envelope"></i> Email: infocaseart.com</p>
 
-                    <div class="social-links">
-                        <a href="tel:+123456789" class="phone" aria-label="Teléfono" target="_blank"><i class="fas fa-phone"></i></a>
-                        <a href="mailto:info@caseart.com?subject=Consulta%20desde%20la%20web" class="gmail" aria-label="Gmail" target="_blank"><i class="fas fa-envelope"></i></a>
-                        <a href="https://www.instagram.com/tucuenta" class="instagram" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/123456789?text=Hola,%20me%20gustaría%20obtener%20información" class="whatsapp" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <div class="social-buttons">
+                        <button class="share-btn whatsapp" onclick="window.open('https://wa.me/123456789?text=Hola,%20me%20gustaría%20obtener%20información')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                        <button class="share-btn email" onclick="window.open('mailto:info@caseart.com?subject=Consulta%20desde%20la%20web')">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                        <button class="share-btn instagram" onclick="window.open('https://www.instagram.com/tucuenta')">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </button>
                     </div>
                 </div>
             </div>
@@ -125,37 +209,20 @@
                 </div>
 
                 <div class="footer-col">
-                    <h3>Enlaces rápidos</h3>
-                    <ul>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="#productos">Productos</a></li>
-                        <li><a href="#ofertas">Ofertas</a></li>
-                        <li><a href="#contacto">Contacto</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
                     <h3>Marcas</h3>
                     <ul>
-                        <li><a href="#">iPhone</a></li>
-                        <li><a href="#">Samsung</a></li>
-                        <li><a href="#">Accesorios</a></li>
-                        <li><a href="#">Huawei</a></li>
+                        <li><a href="#productos#">iPhone</a></li>
+                        <li><a href="#productos#">Samsung</a></li>
+                        <li><a href="#productos#">Accesorios</a></li>
+                        <li><a href="#productos#">Protectores</a></li>
                     </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Newsletter</h3>
-                    <p>Suscríbete para recibir ofertas exclusivas.</p>
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Tu email">
-                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
-                    </form>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2025 CaseArt. Todos los derechos reservados.</p>  
+                <p>&copy; 2025 CaseArt. Todos los derechos reservados.
+                    <br>Desarrollado por <a href="https://github.com/GerardoHMX" target="_blank">GerardoHMX</a>
+                </p>  
             </div>
         </div>
     </footer>

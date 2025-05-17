@@ -49,6 +49,32 @@ document.addEventListener('DOMContentLoaded', () => {
             this.style.transform = 'scale(1)';
         });
     });
+
+    // Agregar scroll suave a los enlaces internos
+    document.querySelectorAll('.scroll-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Cerrar el menú móvil si está abierto
+                const navLinks = document.querySelector('.nav-links');
+                const hamburger = document.querySelector('.hamburger');
+                if (navLinks && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+        });
+    });
+
+    initializeOffers();
 });
 
 function displayProducts() {
@@ -95,18 +121,284 @@ function createProductCard(product) {
             <span class="price">${product.price}</span>
         </div>
         <div class="product-buttons">
-            <button class="card-btn view-btn">Ver detalles</button>
-            <button class="card-btn add-to-cart" data-product-id="${product.id}" onclick="addToCart(${product.id})">
-                Añadir al carrito
+            <button class="card-btn view-btn" data-product-id="${product.id}">
+                <i class="fas fa-eye"></i> Ver detalles
+            </button>
+            <button class="card-btn add-to-cart" data-product-id="${product.id}">
+                <i class="fas fa-shopping-cart"></i> Añadir al carrito
             </button>
         </div>
     `;
+
+    // Añadir event listeners después de crear el elemento
+    const viewBtn = card.querySelector('.view-btn');
+    viewBtn.addEventListener('click', () => openModal(product.id));
+
+    const addToCartBtn = card.querySelector('.add-to-cart');
+    addToCartBtn.addEventListener('click', () => addToCart(product.id));
 
     if (hasMultipleImages) {
         setupCarousel(card, product.images);
     }
 
     return card;
+}
+
+function openModal(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+
+    const colorSelector = product.colors ? `
+        <div class="modal-colors">
+            <h4>Selecciona un color:</h4>
+            <div class="color-options">
+                ${product.colors.map(color => `
+                    <button class="color-btn" data-color="${color}" 
+                            style="background-color: ${color.toLowerCase()}">
+                        <span class="color-name">${color}</span>
+                    </button>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
+
+    const modelSelector = product.models ? `
+        <div class="modal-models">
+            <h4>Selecciona el modelo:</h4>
+            <div class="model-options">
+                ${product.models.map(model => `
+                    <button class="model-btn" data-model="${model}">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span class="model-name">${model}</span>
+                    </button>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
+
+    const featuresSection = product.features ? `
+        <div class="modal-features">
+            ${product.features.map(feature => `
+                <div class="feature-item">
+                    <i class="fas fa-${feature.icon}"></i>
+                    <span>${feature.text}</span>
+                </div>
+            `).join('')}
+        </div>
+    ` : '';
+
+    const quantitySelector = `
+        <div class="quantity-selector">
+            <h4>Selecciona la cantidad y combinación:</h4>
+            <div class="quantity-group">
+                <div class="quantity-controls">
+                    <button class="quantity-btn minus-btn" type="button">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <span class="quantity-display">1</span>
+                    <button class="quantity-btn plus-btn" type="button">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <button class="add-combination">
+                    <i class="fas fa-plus"></i>
+                    Agregar combinación
+                </button>
+            </div>
+            <div class="selected-combinations">
+                <h4>Combinaciones seleccionadas:</h4>
+                <div class="combinations-list"></div>
+            </div>
+        </div>
+    `;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal(this)">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-content">
+                <div class="modal-images">
+                    ${product.images ? `
+                        <div class="modal-carousel-buttons">
+                            <button class="modal-carousel-btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="modal-carousel-btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="carousel-images">
+                            ${product.images.map(img => `
+                                <img src="${img}" alt="${product.name}">
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <img src="${product.image}" alt="${product.name}">
+                    `}
+                </div>
+                <div class="modal-info">
+                    <h2 class="modal-title">${product.name}</h2>
+                    <div class="modal-price">${product.price}€</div>
+                    <p class="modal-description">${product.description}</p>
+                    
+                    ${colorSelector}
+                    ${modelSelector}
+                    ${quantitySelector}
+                    ${featuresSection}
+
+                    <div class="modal-buttons">
+                        <button class="card-btn add-to-cart" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    
+    // Configurar los eventos de los botones después de añadir el modal al DOM
+    const closeBtn = modal.querySelector('.modal-close');
+    closeBtn.addEventListener('click', () => closeModal(modal));
+
+    // Cerrar modal al hacer clic fuera
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal(modal);
+        }
+    });
+
+    // Configurar los eventos de los botones de color
+    if (product.colors) {
+        const colorBtns = modal.querySelectorAll('.color-btn');
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                colorBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                modal.querySelector('.add-to-cart').dataset.selectedColor = btn.dataset.color;
+            });
+        });
+    }
+
+    // Configurar los eventos de los botones de modelo
+    if (product.models) {
+        const modelBtns = modal.querySelectorAll('.model-btn');
+        modelBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modelBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                modal.querySelector('.add-to-cart').dataset.selectedModel = btn.dataset.model;
+            });
+        });
+    }
+
+    setTimeout(() => {
+        modal.classList.add('active');
+        modal.querySelector('.modal').classList.add('active');
+    }, 10);
+
+    // Si el producto tiene múltiples imágenes, configurar el carrusel
+    if (product.images && product.images.length > 1) {
+        setupCarousel(modal, product.images);
+    }
+
+    // Configurar controles de cantidad
+    const minusBtn = modal.querySelector('.minus-btn');
+    const plusBtn = modal.querySelector('.plus-btn');
+    const quantityDisplay = modal.querySelector('.quantity-display');
+    let quantity = 1;
+
+    minusBtn.addEventListener('click', () => {
+        if (quantity > 1) {
+            quantity--;
+            quantityDisplay.textContent = quantity;
+        }
+    });
+
+    plusBtn.addEventListener('click', () => {
+        quantity++;
+        quantityDisplay.textContent = quantity;
+    });
+
+    // Manejar selección de combinaciones
+    const combinations = [];
+    const addCombinationBtn = modal.querySelector('.add-combination');
+    const combinationsContainer = modal.querySelector('.selected-combinations');
+
+    addCombinationBtn.addEventListener('click', () => {
+        const selectedColor = modal.querySelector('.color-btn.active')?.dataset.color;
+        const selectedModel = modal.querySelector('.model-btn.active')?.dataset.model;
+
+        if (!selectedColor || !selectedModel) {
+            showAlert('Por favor, selecciona color y modelo');
+            return;
+        }
+
+        const combination = {
+            color: selectedColor,
+            model: selectedModel,
+            quantity: quantity
+        };
+
+        combinations.push(combination);
+        updateCombinationsDisplay();
+    });
+
+    function updateCombinationsDisplay() {
+        combinationsContainer.innerHTML = combinations.map((combo, index) => `
+            <div class="combination-item">
+                <div class="combination-info">
+                    ${combo.quantity}x ${combo.model} - ${combo.color}
+                </div>
+                <button class="combination-delete" data-index="${index}">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `).join('');
+
+        // Configurar botones de eliminación
+        combinationsContainer.querySelectorAll('.combination-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = e.currentTarget.dataset.index;
+                combinations.splice(index, 1);
+                updateCombinationsDisplay();
+            });
+        });
+    }
+
+    // Modificar la función de añadir al carrito
+    const addToCartBtn = modal.querySelector('.add-to-cart');
+    addToCartBtn.addEventListener('click', () => {
+        if (combinations.length === 0) {
+            showAlert('Por favor, agrega al menos una combinación');
+            return;
+        }
+
+        combinations.forEach(combo => {
+            const cartItem = {
+                ...product,
+                selectedColor: combo.color,
+                selectedModel: combo.model,
+                quantity: combo.quantity
+            };
+            addToCart(cartItem);
+        });
+
+        closeModal(modal);
+    });
+}
+
+function closeModal(modal) {
+    document.body.style.overflow = ''; // Restaurar scroll del body
+    modal.querySelector('.modal').classList.remove('active');
+    modal.classList.remove('active');
+    setTimeout(() => modal.remove(), 300);
 }
 
 function createCarouselMarkup(product) {
@@ -247,46 +539,78 @@ function setupLoadMoreButton() {
     }
 }
 
-function addToCart(productId) {
-    const button = document.querySelector(`[data-product-id="${productId}"]`);
-    const originalText = button.textContent;
+function addToCart(item) {
+    const cartArray = JSON.parse(localStorage.getItem('cart')) || [];
     
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
+    // Buscar si existe una combinación idéntica
+    const existingItemIndex = cartArray.findIndex(cartItem => 
+        cartItem.id === item.id && 
+        cartItem.selectedColor === item.selectedColor && 
+        cartItem.selectedModel === item.selectedModel
+    );
 
-    const existingItem = cart.find(item => item.id === productId);
-    
-    if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + 1;
+    if (existingItemIndex >= 0) {
+        cartArray[existingItemIndex].quantity = (parseInt(cartArray[existingItemIndex].quantity) || 1) + (parseInt(item.quantity) || 1);
     } else {
-        product.quantity = 1;
-        cart.push({...product}); // Crear copia del producto
+        const newItem = {
+            ...item,
+            cartItemId: `${item.id}-${Date.now()}`,
+            price: parseFloat(item.price),
+            quantity: parseInt(item.quantity) || 1
+        };
+        cartArray.push(newItem);
     }
+
+    // Actualizar el localStorage y el estado global
+    localStorage.setItem('cart', JSON.stringify(cartArray));
+    window.cart = cartArray;
     
-    // Animación del botón
-    button.classList.add('btn-added');
-    button.innerHTML = `
-        <i class="fas fa-check"></i>
-        Añadido
-    `;
-    
-    button.style.animation = 'addedAnimation 0.5s ease';
-    
-    setTimeout(() => {
-        button.classList.remove('btn-added');
-        button.textContent = originalText;
-        button.style.animation = '';
-    }, 2000);
-    
-    // Actualizar carrito
+    // Actualizar la interfaz
     if (typeof updateCartCount === 'function') {
         updateCartCount();
     }
-    if (typeof saveCart === 'function') {
-        saveCart();
-    }
-    
     showNotification('Producto añadido al carrito');
+}
+
+function showAlert(message) {
+    // Crear o obtener el contenedor de alertas
+    let alertOverlay = document.querySelector('.alert-overlay');
+    if (!alertOverlay) {
+        alertOverlay = document.createElement('div');
+        alertOverlay.className = 'alert-overlay';
+        document.body.appendChild(alertOverlay);
+    }
+
+    const alert = document.createElement('div');
+    alert.className = 'alert';
+    alert.innerHTML = `
+        <i class="fas fa-exclamation-triangle"></i>
+        <span class="alert-message">${message}</span>
+        <button class="alert-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+
+    alertOverlay.appendChild(alert);
+    
+    // Forzar un reflow para que la animación funcione
+    alert.offsetHeight;
+    alert.classList.add('show');
+
+    // Configurar el botón de cerrar
+    const closeBtn = alert.querySelector('.alert-close');
+    closeBtn.addEventListener('click', () => {
+        alert.classList.remove('show');
+        setTimeout(() => alert.remove(), 300);
+    });
+
+    // Auto cerrar después de 5 segundos
+    setTimeout(() => {
+        if (alert.parentElement) {
+            alert.classList.remove('show');
+            setTimeout(() => alert.remove(), 300);
+        }
+    }, 5000);
 }
 
 function showNotification(message) {
@@ -307,5 +631,153 @@ function showNotification(message) {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
     }, 2000);
+}
+
+function initializeOffers() {
+    const offersGrid = document.querySelector('.offers-grid');
+    if (!offersGrid || !window.specialOffers) return;
+
+    const mainOffer = window.specialOffers.find(offer => offer.type === 'main');
+    const secondaryOffers = window.specialOffers.filter(offer => offer.type === 'secondary');
+
+    // Crear la oferta principal
+    const mainOfferHTML = `
+        <div class="offer-card main-offer" data-animate="fadeIn">
+            <div class="offer-image" style="background-image: url('${mainOffer.image}')"></div>
+            <div class="offer-content">
+                <div class="offer-badge">
+                    <span>${mainOffer.discount}% OFF</span>
+                    <i class="fas fa-fire-alt"></i>
+                </div>
+                <h3 class="offer-title">${mainOffer.title}</h3>
+                <p class="offer-desc">${mainOffer.description}</p>
+                <div class="offer-details">
+                    <div class="offer-timer">
+                        <i class="fas fa-clock"></i>
+                        <span>Termina en: ${mainOffer.endTime}</span>
+                    </div>
+                    <a href="#productos" class="btn-modern">
+                        <span>${mainOffer.buttonText}</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Crear ofertas secundarias
+    const secondaryOffersHTML = `
+        <div class="offers-secondary">
+            ${secondaryOffers.map(offer => `
+                <div class="offer-card secondary" data-animate="fadeIn">
+                    <div class="offer-image" style="background-image: url('${offer.image}')"></div>
+                    <div class="offer-content">
+                        <div class="offer-badge ${offer.badge === 'HOT' ? 'hot' : 'new'}">
+                            <span>${offer.badge}</span>
+                            <i class="fas ${offer.badge === 'HOT' ? 'fa-bolt' : 'fa-tags'}"></i>
+                        </div>
+                        <h3 class="offer-title">${offer.title}</h3>
+                        <p class="offer-desc">${offer.description}</p>
+                        <a href="#productos" class="btn-modern ${offer.badge === '2x1' ? 'outline' : ''}">
+                            <span>${offer.buttonText}</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    offersGrid.innerHTML = mainOfferHTML + secondaryOffersHTML;
+
+    // Iniciar animaciones cuando los elementos sean visibles
+    const animateElements = document.querySelectorAll('[data-animate]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    animateElements.forEach(element => observer.observe(element));
+}
+
+// Agregar detección de dispositivo
+function isMobile() {
+    return window.innerWidth <= 768;
+}
+
+// Mejorar el manejo de interacciones táctiles
+function setupTouchInteractions() {
+    const interactiveElements = document.querySelectorAll(
+        '.btn, .card-btn, .filter-btn, .offer-card, .nav-links a'
+    );
+
+    interactiveElements.forEach(element => {
+        element.addEventListener('touchstart', function(e) {
+            this.style.transform = 'scale(0.98)';
+        }, { passive: true });
+
+        element.addEventListener('touchend', function(e) {
+            this.style.transform = '';
+        }, { passive: true });
+    });
+}
+
+// Optimizar carga de imágenes
+function setupLazyLoading() {
+    if ('loading' in HTMLImageElement.prototype) {
+        const images = document.querySelectorAll('img[loading="lazy"]');
+        images.forEach(img => {
+            img.src = img.dataset.src;
+        });
+    } else {
+        // Fallback para navegadores que no soportan lazy loading
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+        document.body.appendChild(script);
+    }
+}
+
+// Inicializar funcionalidades responsive
+document.addEventListener('DOMContentLoaded', () => {
+    setupTouchInteractions();
+    setupLazyLoading();
+    
+    // Ajustar comportamiento del menú en móvil
+    if (isMobile()) {
+        const navLinks = document.querySelector('.nav-links');
+        const links = navLinks.querySelectorAll('a');
+        
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                document.querySelector('.hamburger').innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
+    
+    // Observar cambios en el viewport
+    window.addEventListener('resize', debounce(() => {
+        if (isMobile()) {
+            // Ajustes específicos para móvil
+        } else {
+            // Ajustes específicos para desktop
+        }
+    }, 250));
+});
+
+// Utilidad para debounce
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
